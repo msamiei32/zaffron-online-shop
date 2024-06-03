@@ -16,8 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
+from admin_notification.views import check_notification_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',include('Home.urls'))
+    path('',include('Home.urls')),
+    path('check/notification',check_notification_view, name="check_notifications"),
 ]
+
