@@ -16,11 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
-from admin_notification.views import check_notification_view
+from django.conf.urls.static import static
+from . import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('Home.urls')),
-    path('check/notification',check_notification_view, name="check_notifications"),
-]
+    path('account/',include('account.urls')),
+    path('product/',include('Product.urls')),
+    # path('check/notification',check_notification_view, name="check_notifications"),
+]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
+
 

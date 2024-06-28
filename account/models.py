@@ -1,32 +1,39 @@
+from django.contrib.auth.base_user import BaseUserManager
+from django.contrib.auth.models import AbstractUser,AbstractBaseUser
 from django.db import models
-from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+from django.urls import reverse
+# from .managers import profile
+
+# class manager(models.Manager):
+#     def get_queryset(self):
+#         return super(manager,self).get_queryset().all()
 
 
-class MyUserManager(BaseUserManager):
-    def create_user(self, email,date_joined,password=None):
+class CoustomManager(BaseUserManager):
+
+    def create_user(self, phone, password=None):
         """
         Creates and saves a User with the given email, date of
         birth and password.
         """
-        if not email:
-            raise ValueError("Users must have an email address")
+        if not phone:
+            raise ValueError("User must have an phone")
 
         user = self.model(
-            email=self.normalize_email(email),
-            date_joined=date_joined,
+            phone=self.normalize_email(phone),
         )
 
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email,password=None):
+    def create_superuser(self, phone, password=None):
         """
         Creates and saves a superuser with the given email, date of
         birth and password.
         """
         user = self.create_user(
-            email,
+            phone,
             password=password,
         )
         user.is_admin = True
@@ -34,43 +41,29 @@ class MyUserManager(BaseUserManager):
         return user
 
 
-class User(AbstractBaseUser):
-    email = models.EmailField(
-        verbose_name="ایمیل",
-        max_length=255,
-        unique=True,
-    )
-    fullname = models.CharField(max_length=60,null=True,verbose_name='نام و نام خانوادگی')
-    is_active = models.BooleanField(default=True,verbose_name='فعال')
-    date_joined = models.DateTimeField(default=True,null=True,blank=True,verbose_name='زمان اضافه شدن')
-    is_admin = models.BooleanField(default=False,verbose_name='ادمین')
-    is_superuser = models.BooleanField(default=False,verbose_name='ابر کاربر')
+class User(AbstractUser):
+    phone = models.CharField(max_length=12,unique=True,verbose_name='تلفن')
+    image = models.ImageField(upload_to='account/profile',null=True,verbose_name='تصویر پروفایل')
+    username = models.CharField(max_length=150,null=True,default=None,help_text=("Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."),)
+    # objects = profile
 
-    objects = MyUserManager()
-
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = []
+    USERNAME_FIELD = 'phone'
+    REQUIRED_FIELDS = ['username']
 
 
-    class Meta:
-        verbose_name = 'کاربر'
-        verbose_name_plural = 'کاربران'
 
     def __str__(self):
-        return self.email
+        return self.phone
 
-    def has_perm(self, perm, obj=None):
-        "Does the user have a specific permission?"
-        # Simplest possible answer: Yes, always
-        return True
+    def get_absolute_url(self):
+        return reverse('account:users')
 
-    def has_module_perms(self, app_label):
-        "Does the user have permissions to view the app `app_label`?"
-        # Simplest possible answer: Yes, always
-        return True
 
-    @property
-    def is_staff(self):
-        "Is the user a member of staff?"
-        # Simplest possible answer: All admins are staff
-        return self.is_admin
+    objects = CoustomManager()
+
+
+
+
+
+
+

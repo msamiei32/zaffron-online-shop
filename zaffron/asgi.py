@@ -1,5 +1,5 @@
 """
-ASGI config for zaffron project.
+ASGI zaffron for zaffron project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 

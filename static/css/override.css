@@ -1,0 +1,10 @@
+.inline-group h2,#header
+{
+    margin: 0;
+    padding: 50px 60px 50px 50px;
+    font-size: 20px;
+    text-align: left;
+    font-weight: bold;
+    background: #7CA0C7 url(../images/admin/zaffron2.jpg) top left repeat-x;
+    color: #fff;
+}
